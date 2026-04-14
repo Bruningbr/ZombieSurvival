@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zombie Survival - Apocalipse Online</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <!-- Main Menu -->
+    <div id="main-menu" class="menu-screen active">
+        <div class="menu-overlay"></div>
+        <div class="menu-content">
+            <h1 class="game-title">ZOMBIE<span class="title-highlight">SURVIVAL</span></h1>
+            <p class="game-subtitle">APOCALIPSE ONLINE</p>
+            <div class="menu-buttons">
+                <button id="btn-play" class="menu-btn primary">JOGAR</button>
+                <button id="btn-multiplayer" class="menu-btn">MULTIPLAYER</button>
+                <button id="btn-leaderboard" class="menu-btn">RANKING</button>
+                <button id="btn-settings" class="menu-btn">CONFIGURAÇÕES</button>
+            </div>
+            <div class="menu-footer">
+                <p>Clique para jogar - Use WASD para mover, Mouse para mirar</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Settings Menu -->
+    <div id="settings-menu" class="menu-screen">
+        <div class="menu-overlay"></div>
+        <div class="menu-content settings-content">
+            <h2>CONFIGURAÇÕES</h2>
+            <div class="settings-group">
+                <label>Volume Master</label>
+                <input type="range" id="setting-master-vol" min="0" max="100" value="80">
+                <span id="master-vol-val">80%</span>
+            </div>
+            <div class="settings-group">
+                <label>Volume Música</label>
+                <input type="range" id="setting-music-vol" min="0" max="100" value="50">
+                <span id="music-vol-val">50%</span>
+            </div>
+            <div class="settings-group">
+                <label>Volume SFX</label>
+                <input type="range" id="setting-sfx-vol" min="0" max="100" value="80">
+                <span id="sfx-vol-val">80%</span>
+            </div>
+            <div class="settings-group">
+                <label>Sensibilidade Mouse</label>
+                <input type="range" id="setting-sensitivity" min="1" max="20" value="5">
+                <span id="sensitivity-val">5</span>
+            </div>
+            <div class="settings-group">
+                <label>Qualidade Gráfica</label>
+                <select id="setting-quality">
+                    <option value="low">Baixa</option>
+                    <option value="medium" selected>Média</option>
+                    <option value="high">Alta</option>
+                </select>
+            </div>
+            <button id="btn-settings-back" class="menu-btn">VOLTAR</button>
+        </div>
+    </div>
+
+    <!-- Multiplayer Menu -->
+    <div id="multiplayer-menu" class="menu-screen">
+        <div class="menu-overlay"></div>
+        <div class="menu-content">
+            <h2>MULTIPLAYER</h2>
+            <div class="mp-form">
+                <div class="settings-group">
+                    <label>Seu Nome</label>
+                    <input type="text" id="player-name" placeholder="Jogador" maxlength="20" value="Jogador">
+                </div>
+                <div class="settings-group">
+                    <label>Endereço do Servidor</label>
+                    <input type="text" id="server-address" placeholder="wss://zombie-survival-serve-vkqevpda.fly.dev/ws" value="wss://zombie-survival-serve-vkqevpda.fly.dev/ws">
+                </div>
+                <button id="btn-host" class="menu-btn primary">HOSPEDAR</button>
+                <button id="btn-join" class="menu-btn primary">CONECTAR</button>
+            </div>
+            <button id="btn-mp-back" class="menu-btn">VOLTAR</button>
+        </div>
+    </div>
+
+    <!-- Leaderboard Screen -->
+    <div id="leaderboard-screen" class="menu-screen">
+        <div class="menu-overlay"></div>
+        <div class="menu-content leaderboard-content">
+            <h2>RANKING</h2>
+            <div class="leaderboard-tabs">
+                <button class="tab-btn active" data-sort="score">SCORE</button>
+                <button class="tab-btn" data-sort="kills">KILLS</button>
+                <button class="tab-btn" data-sort="waves">WAVES</button>
+            </div>
+            <div id="leaderboard-list" class="leaderboard-list">
+                <div class="lb-header">
+                    <span>#</span><span>JOGADOR</span><span>SCORE</span><span>KILLS</span><span>WAVES</span><span>TEMPO</span>
+                </div>
+            </div>
+            <button id="btn-lb-back" class="menu-btn">VOLTAR</button>
+        </div>
+    </div>
+
+    <!-- Game HUD -->
+    <div id="game-hud" class="hud hidden">
+        <!-- Health Bar -->
+        <div class="hud-health">
+            <div class="bar-container">
+                <div id="health-bar" class="bar health-bar" style="width:100%"></div>
+            </div>
+            <span id="health-text">100</span>
+            <span class="bar-icon">❤</span>
+        </div>
+        <!-- Stamina Bar -->
+        <div class="hud-stamina">
+            <div class="bar-container">
+                <div id="stamina-bar" class="bar stamina-bar" style="width:100%"></div>
+            </div>
+            <span class="bar-icon">⚡</span>
+        </div>
+        <!-- Ammo -->
+        <div class="hud-ammo">
+            <span id="ammo-current">30</span>
+            <span class="ammo-separator">/</span>
+            <span id="ammo-reserve">120</span>
+            <div id="weapon-name" class="weapon-name">Pistol</div>
+        </div>
+        <!-- Wave Info -->
+        <div class="hud-wave">
+            <span id="wave-number">WAVE 1</span>
+            <span id="zombie-count">Zombies: 0</span>
+        </div>
+        <!-- Score -->
+        <div class="hud-score">
+            <span id="score-display">Score: 0</span>
+            <span id="kills-display">Kills: 0</span>
+        </div>
+        <!-- Crosshair -->
+        <div id="crosshair" class="crosshair">
+            <div class="crosshair-line top"></div>
+            <div class="crosshair-line bottom"></div>
+            <div class="crosshair-line left"></div>
+            <div class="crosshair-line right"></div>
+            <div id="hit-marker" class="hit-marker hidden"></div>
+        </div>
+        <!-- Damage overlay -->
+        <div id="damage-overlay" class="damage-overlay"></div>
+        <!-- Wave notification -->
+        <div id="wave-notification" class="wave-notification hidden">
+            <h2 id="wave-notify-text">WAVE 1</h2>
+            <p id="wave-notify-sub">5 Zombies Incoming!</p>
+        </div>
+        <!-- Interaction prompt -->
+        <div id="interaction-prompt" class="interaction-prompt hidden">
+            <span>[E] Interagir</span>
+        </div>
+        <!-- Weapon slots -->
+        <div class="hud-weapons">
+            <div class="weapon-slot active" data-slot="0">1: Pistola</div>
+            <div class="weapon-slot" data-slot="1">2: ---</div>
+            <div class="weapon-slot" data-slot="2">3: ---</div>
+        </div>
+    </div>
+
+    <!-- Pause Menu -->
+    <div id="pause-menu" class="menu-screen hidden">
+        <div class="menu-overlay"></div>
+        <div class="menu-content">
+            <h2>PAUSADO</h2>
+            <button id="btn-resume" class="menu-btn primary">CONTINUAR</button>
+            <button id="btn-pause-settings" class="menu-btn">CONFIGURAÇÕES</button>
+            <button id="btn-quit" class="menu-btn danger">SAIR</button>
+        </div>
+    </div>
+
+    <!-- Death Screen -->
+    <div id="death-screen" class="menu-screen hidden">
+        <div class="menu-overlay death-overlay"></div>
+        <div class="menu-content">
+            <h2 class="death-title">VOCÊ MORREU</h2>
+            <div id="death-stats" class="death-stats"></div>
+            <div id="respawn-timer" class="respawn-timer">Respawn em 5s...</div>
+            <button id="btn-respawn" class="menu-btn primary" disabled>RESPAWN</button>
+            <button id="btn-death-quit" class="menu-btn danger">SAIR</button>
+        </div>
+    </div>
+
+    <!-- Game Over Screen -->
+    <div id="gameover-screen" class="menu-screen hidden">
+        <div class="menu-overlay death-overlay"></div>
+        <div class="menu-content">
+            <h2 class="gameover-title">GAME OVER</h2>
+            <div id="gameover-stats" class="death-stats"></div>
+            <div id="gameover-rank" class="rank-display"></div>
+            <button id="btn-play-again" class="menu-btn primary">JOGAR NOVAMENTE</button>
+            <button id="btn-gameover-leaderboard" class="menu-btn">VER RANKING</button>
+            <button id="btn-gameover-quit" class="menu-btn danger">MENU PRINCIPAL</button>
+        </div>
+    </div>
+
+    <!-- Loading Screen -->
+    <div id="loading-screen" class="menu-screen hidden">
+        <div class="menu-overlay"></div>
+        <div class="menu-content">
+            <h2>CARREGANDO...</h2>
+            <div class="loading-bar-container">
+                <div id="loading-bar" class="loading-bar"></div>
+            </div>
+            <p id="loading-text">Preparando o apocalipse...</p>
+        </div>
+    </div>
+
+    <!-- Three.js Canvas -->
+    <canvas id="game-canvas"></canvas>
+
+    <!-- Scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="js/utils/MathUtils.js"></script>
+    <script src="js/audio/AudioManager.js"></script>
+    <script src="js/environment/Environment.js"></script>
+    <script src="js/environment/DayNightCycle.js"></script>
+    <script src="js/player/PlayerController.js"></script>
+    <script src="js/player/PlayerHealth.js"></script>
+    <script src="js/player/PlayerStamina.js"></script>
+    <script src="js/weapons/WeaponSystem.js"></script>
+    <script src="js/zombie/ZombieAI.js"></script>
+    <script src="js/zombie/ZombieSpawner.js"></script>
+    <script src="js/ui/HUD.js"></script>
+    <script src="js/ui/MenuManager.js"></script>
+    <script src="js/network/MultiplayerClient.js"></script>
+    <script src="js/game/Leaderboard.js"></script>
+    <script src="js/game/Game.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html>
