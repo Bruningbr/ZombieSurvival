@@ -162,6 +162,7 @@ class MenuManager {
     showScreen(name) {
         Object.values(this.screens).forEach(s => s.classList.remove('active'));
         if (this.screens[name]) {
+            this.screens[name].classList.remove('hidden');
             this.screens[name].classList.add('active');
         }
         this.currentScreen = name;

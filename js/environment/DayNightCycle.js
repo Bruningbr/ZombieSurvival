@@ -2,8 +2,8 @@
 class DayNightCycle {
     constructor(scene) {
         this.scene = scene;
-        this.timeOfDay = 0.75; // Start at dusk for spooky atmosphere
-        this.cycleDuration = 300; // 5 minutes per full cycle
+        this.timeOfDay = 0.40; // Start at daytime for visibility
+        this.cycleDuration = 600; // 10 minutes per full cycle (more time in daylight)
         this.sunLight = null;
         this.ambientLight = null;
         this.moonLight = null;
@@ -26,7 +26,7 @@ class DayNightCycle {
         this.scene.add(this.sunLight);
 
         // Ambient
-        this.ambientLight = new THREE.AmbientLight(0x334455, 0.3);
+        this.ambientLight = new THREE.AmbientLight(0x667788, 0.6);
         this.scene.add(this.ambientLight);
 
         // Moon
@@ -34,11 +34,11 @@ class DayNightCycle {
         this.scene.add(this.moonLight);
 
         // Hemisphere light for better ambient
-        this.hemiLight = new THREE.HemisphereLight(0x8899bb, 0x333322, 0.3);
+        this.hemiLight = new THREE.HemisphereLight(0xaabbdd, 0x556644, 0.5);
         this.scene.add(this.hemiLight);
 
-        // Fog
-        this.scene.fog = new THREE.FogExp2(0x111122, 0.008);
+        // Fog (light, for depth cue only)
+        this.scene.fog = new THREE.FogExp2(0x889aab, 0.003);
     }
 
     get isNight() {
@@ -93,7 +93,7 @@ class DayNightCycle {
         this.moonLight.intensity = moonIntensity;
 
         // Ambient light
-        const ambIntensity = MathUtils.clamp(sunHeight * 0.5 + 0.15, 0.05, 0.5);
+        const ambIntensity = MathUtils.clamp(sunHeight * 0.6 + 0.35, 0.2, 0.7);
         this.ambientLight.intensity = ambIntensity;
 
         // Ambient color shifts
@@ -113,29 +113,29 @@ class DayNightCycle {
 
         // Fog
         if (this.isNight) {
-            this.scene.fog.color.setHex(0x0a0a15);
-            this.scene.fog.density = 0.012;
+            this.scene.fog.color.setHex(0x1a1a2a);
+            this.scene.fog.density = 0.006;
         } else if (this.isDusk || this.isDawn) {
-            this.scene.fog.color.setHex(0x332211);
-            this.scene.fog.density = 0.008;
+            this.scene.fog.color.setHex(0x665544);
+            this.scene.fog.density = 0.004;
         } else {
-            this.scene.fog.color.setHex(0x889aab);
-            this.scene.fog.density = 0.005;
+            this.scene.fog.color.setHex(0x99aabb);
+            this.scene.fog.density = 0.002;
         }
 
         // Background color
         if (this.isNight) {
-            this.scene.background = new THREE.Color(0x0a0a18);
+            this.scene.background = new THREE.Color(0x151525);
         } else if (this.isDusk) {
-            this.scene.background = new THREE.Color(0x331a10);
+            this.scene.background = new THREE.Color(0x664430);
         } else if (this.isDawn) {
-            this.scene.background = new THREE.Color(0x2a1a20);
+            this.scene.background = new THREE.Color(0x553340);
         } else {
-            const skyBright = MathUtils.clamp(sunHeight, 0.3, 1);
+            const skyBright = MathUtils.clamp(sunHeight, 0.4, 1);
             this.scene.background = new THREE.Color().setRGB(
-                0.4 * skyBright,
                 0.5 * skyBright,
-                0.7 * skyBright
+                0.6 * skyBright,
+                0.85 * skyBright
             );
         }
     }

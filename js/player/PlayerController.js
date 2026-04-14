@@ -120,7 +120,7 @@ class PlayerController {
 
         // Sprint
         this.isSprinting = this.keys['ShiftLeft'] && this.keys['KeyW'] && !this.isCrouching
-                           && stamina.current > 0;
+                           && stamina.current > 0 && !stamina.isExhausted;
 
         // Crouch
         if (this.keys['KeyC'] || this.keys['ControlLeft']) {

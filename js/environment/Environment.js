@@ -20,7 +20,7 @@ class Environment {
     createGround() {
         const geo = new THREE.PlaneGeometry(200, 200, 20, 20);
         const mat = new THREE.MeshStandardMaterial({
-            color: 0x333333,
+            color: 0x556655,
             roughness: 0.9,
             metalness: 0.1
         });
@@ -32,7 +32,7 @@ class Environment {
 
         // Road markings
         const roadGeo = new THREE.PlaneGeometry(12, 200);
-        const roadMat = new THREE.MeshStandardMaterial({ color: 0x222222, roughness: 0.95 });
+        const roadMat = new THREE.MeshStandardMaterial({ color: 0x444444, roughness: 0.95 });
         const road1 = new THREE.Mesh(roadGeo, roadMat);
         road1.rotation.x = -Math.PI / 2;
         road1.position.y = 0.01;

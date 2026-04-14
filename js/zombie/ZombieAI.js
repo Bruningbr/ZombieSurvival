@@ -106,26 +106,26 @@ class ZombieAI {
 
         // Arms
         const armGeo = new THREE.BoxGeometry(0.15, s.height * 0.35, 0.15);
-        this.leftArm = new THREE.Mesh(armGeo, bodyMat.clone());
+        this.leftArm = new THREE.Mesh(armGeo.clone(), bodyMat.clone());
         this.leftArm.position.set(-0.45, s.height * 0.5, 0.1);
         this.leftArm.geometry.translate(0, -s.height * 0.15, 0);
         this.mesh.add(this.leftArm);
 
-        this.rightArm = new THREE.Mesh(armGeo, bodyMat.clone());
+        this.rightArm = new THREE.Mesh(armGeo.clone(), bodyMat.clone());
         this.rightArm.position.set(0.45, s.height * 0.5, 0.1);
         this.rightArm.geometry.translate(0, -s.height * 0.15, 0);
         this.mesh.add(this.rightArm);
 
         // Legs
         const legGeo = new THREE.BoxGeometry(0.18, s.height * 0.35, 0.18);
-        this.leftLeg = new THREE.Mesh(legGeo, new THREE.MeshStandardMaterial({
+        this.leftLeg = new THREE.Mesh(legGeo.clone(), new THREE.MeshStandardMaterial({
             color: 0x333333, roughness: 0.9
         }));
         this.leftLeg.position.set(-0.15, s.height * 0.18, 0);
         this.leftLeg.geometry.translate(0, -s.height * 0.15, 0);
         this.mesh.add(this.leftLeg);
 
-        this.rightLeg = new THREE.Mesh(legGeo, this.leftLeg.material.clone());
+        this.rightLeg = new THREE.Mesh(legGeo.clone(), this.leftLeg.material.clone());
         this.rightLeg.position.set(0.15, s.height * 0.18, 0);
         this.rightLeg.geometry.translate(0, -s.height * 0.15, 0);
         this.mesh.add(this.rightLeg);

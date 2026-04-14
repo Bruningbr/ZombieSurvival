@@ -10,9 +10,9 @@ class ZombieSpawner {
         this.zombiesAlive = 0;
         this.zombiesToSpawn = 0;
         this.spawnTimer = 0;
-        this.spawnInterval = 2.0;
-        this.waveDelay = 10;
-        this.waveDelayTimer = 5; // Initial delay before first wave
+        this.spawnInterval = 0.8;
+        this.waveDelay = 8;
+        this.waveDelayTimer = 3; // Initial delay before first wave
         this.waveActive = false;
 
         this.onWaveStart = null;
@@ -27,7 +27,7 @@ class ZombieSpawner {
 
     startGame() {
         this.currentWave = 0;
-        this.waveDelayTimer = 3;
+        this.waveDelayTimer = 1;
         this.waveActive = false;
         this.zombies = [];
     }
@@ -49,7 +49,7 @@ class ZombieSpawner {
         this.speedMultiplier = 1 + (this.currentWave - 1) * 0.05;
 
         // Faster spawning in later waves
-        this.spawnInterval = Math.max(0.5, 2.0 - this.currentWave * 0.1);
+        this.spawnInterval = Math.max(0.3, 0.8 - this.currentWave * 0.05);
 
         if (this.onWaveStart) this.onWaveStart(this.currentWave, this.zombiesToSpawn);
         audioManager.playSFX('wave_start', 0.6);
@@ -85,7 +85,7 @@ class ZombieSpawner {
         for (let i = 0; i < 5; i++) {
             const sp = this.environment.getRandomSpawnPoint();
             const dist = MathUtils.distanceFlat(sp, playerPosition);
-            if (dist > bestDist && dist > 30) {
+            if (dist > bestDist && dist > 15) {
                 bestDist = dist;
                 bestSpawn = sp;
             }
