@@ -24,6 +24,7 @@ class ZombieAI {
         this.wanderTarget = null;
         this.stateTimer = 0;
         this.attackCooldown = 0;
+        this.damageDealt = false;
         this.stunTimer = 0;
         this.groanTimer = MathUtils.randFloat(2, 8);
 
@@ -326,8 +327,8 @@ class ZombieAI {
         // Attack
         if (this.attackCooldown <= 0) {
             this.attackCooldown = this.stats.attackCooldown;
+            this.damageDealt = false;
             audioManager.playSFX('zombie_attack', 0.5, MathUtils.randFloat(0.8, 1.2));
-            return; // Game.js handles damage application
         }
     }
 
@@ -425,6 +426,7 @@ class ZombieAI {
     }
 
     get isAttacking() {
-        return this.state === 'attack' && this.attackCooldown > this.stats.attackCooldown * 0.7;
+        return this.state === 'attack' && !this.damageDealt &&
+            this.attackCooldown > this.stats.attackCooldown * 0.7;
     }
 }

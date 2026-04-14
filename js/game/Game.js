@@ -116,6 +116,10 @@ class Game {
             setTimeout(() => {
                 this.menuManager.showLoading(60, 'Invocando zombies...');
 
+                // Cleanup previous instances
+                if (this.player) this.player.dispose();
+                if (this.weapons) this.weapons.dispose();
+
                 // Init systems
                 this.health = new PlayerHealth();
                 this.stamina = new PlayerStamina();
@@ -371,7 +375,6 @@ class Game {
     update(deltaTime) {
         if (!this.isRunning || this.isPaused) return;
         if (this.health && this.health.isDead) {
-            this.menuManager.update(deltaTime);
             return;
         }
 
@@ -418,6 +421,7 @@ class Game {
                 const dist = MathUtils.distanceFlat(this.player.position, zombie.mesh.position);
                 if (dist < zombie.attackRange) {
                     this.health.takeDamage(zombie.damage);
+                    zombie.damageDealt = true;
                 }
             }
         });

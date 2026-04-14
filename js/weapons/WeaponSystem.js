@@ -79,31 +79,46 @@ class WeaponSystem {
     }
 
     setupInput() {
-        document.addEventListener('keydown', e => {
+        this._onKeyDown = e => {
             if (e.code === 'Digit1') this.switchWeapon(0);
             if (e.code === 'Digit2') this.switchWeapon(1);
             if (e.code === 'Digit3') this.switchWeapon(2);
             if (e.code === 'KeyR') this.startReload();
-        });
-
-        document.addEventListener('wheel', e => {
+        };
+        this._onWheel = e => {
             if (e.deltaY > 0) {
                 this.switchWeapon((this.currentSlot + 1) % 3);
             } else {
                 this.switchWeapon((this.currentSlot + 2) % 3);
             }
-        });
-
-        this.mouseDown = false;
-        document.addEventListener('mousedown', e => {
+        };
+        this._onMouseDown = e => {
             if (e.button === 0) this.mouseDown = true;
             if (e.button === 2) this.isADS = true;
-        });
-        document.addEventListener('mouseup', e => {
+        };
+        this._onMouseUp = e => {
             if (e.button === 0) this.mouseDown = false;
             if (e.button === 2) this.isADS = false;
-        });
-        document.addEventListener('contextmenu', e => e.preventDefault());
+        };
+        this._onContextMenu = e => e.preventDefault();
+
+        this.mouseDown = false;
+        document.addEventListener('keydown', this._onKeyDown);
+        document.addEventListener('wheel', this._onWheel);
+        document.addEventListener('mousedown', this._onMouseDown);
+        document.addEventListener('mouseup', this._onMouseUp);
+        document.addEventListener('contextmenu', this._onContextMenu);
+    }
+
+    dispose() {
+        document.removeEventListener('keydown', this._onKeyDown);
+        document.removeEventListener('wheel', this._onWheel);
+        document.removeEventListener('mousedown', this._onMouseDown);
+        document.removeEventListener('mouseup', this._onMouseUp);
+        document.removeEventListener('contextmenu', this._onContextMenu);
+        if (this.weaponModel) {
+            this.camera.remove(this.weaponModel);
+        }
     }
 
     createWeaponModels() {

@@ -48,26 +48,36 @@ class PlayerController {
     }
 
     setupControls() {
-        document.addEventListener('keydown', e => {
-            this.keys[e.code] = true;
-        });
-        document.addEventListener('keyup', e => {
-            this.keys[e.code] = false;
-        });
-        document.addEventListener('mousemove', e => {
+        this._onKeyDown = e => { this.keys[e.code] = true; };
+        this._onKeyUp = e => { this.keys[e.code] = false; };
+        this._onMouseMove = e => {
             if (this.isLocked) {
                 this.mouseDX += e.movementX;
                 this.mouseDY += e.movementY;
             }
-        });
-        this.canvas.addEventListener('click', () => {
+        };
+        this._onClick = () => {
             if (!this.isLocked) {
                 this.canvas.requestPointerLock();
             }
-        });
-        document.addEventListener('pointerlockchange', () => {
+        };
+        this._onPointerLock = () => {
             this.isLocked = document.pointerLockElement === this.canvas;
-        });
+        };
+
+        document.addEventListener('keydown', this._onKeyDown);
+        document.addEventListener('keyup', this._onKeyUp);
+        document.addEventListener('mousemove', this._onMouseMove);
+        this.canvas.addEventListener('click', this._onClick);
+        document.addEventListener('pointerlockchange', this._onPointerLock);
+    }
+
+    dispose() {
+        document.removeEventListener('keydown', this._onKeyDown);
+        document.removeEventListener('keyup', this._onKeyUp);
+        document.removeEventListener('mousemove', this._onMouseMove);
+        this.canvas.removeEventListener('click', this._onClick);
+        document.removeEventListener('pointerlockchange', this._onPointerLock);
     }
 
     get isMoving() {
