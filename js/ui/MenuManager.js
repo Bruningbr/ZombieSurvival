@@ -22,6 +22,7 @@ class MenuManager {
 
         this.respawnTimer = 0;
         this.respawnDuration = 5;
+        this.previousScreen = 'mainMenu';
 
         this.setupEvents();
     }
@@ -47,15 +48,17 @@ class MenuManager {
 
         document.getElementById('btn-settings').addEventListener('click', () => {
             audioManager.playSFX('button_click', 0.5);
+            this.previousScreen = 'mainMenu';
             this.showScreen('settings');
         });
 
         // Settings
         document.getElementById('btn-settings-back').addEventListener('click', () => {
-            this.showScreen('mainMenu');
+            this.showScreen(this.previousScreen || 'mainMenu');
         });
 
         document.getElementById('btn-pause-settings').addEventListener('click', () => {
+            this.previousScreen = 'pause';
             this.showScreen('settings');
         });
 
@@ -231,14 +234,19 @@ class MenuManager {
             else if (idx === 1) div.classList.add('silver');
             else if (idx === 2) div.classList.add('bronze');
 
-            div.innerHTML = `
-                <span>${idx + 1}</span>
-                <span>${entry.name}</span>
-                <span>${entry.score.toLocaleString()}</span>
-                <span>${entry.kills}</span>
-                <span>${entry.waves}</span>
-                <span>${MathUtils.formatTime(entry.survivalTime)}</span>
-            `;
+            const fields = [
+                idx + 1,
+                entry.name,
+                entry.score.toLocaleString(),
+                entry.kills,
+                entry.waves,
+                MathUtils.formatTime(entry.survivalTime)
+            ];
+            fields.forEach(val => {
+                const span = document.createElement('span');
+                span.textContent = val;
+                div.appendChild(span);
+            });
             list.appendChild(div);
         });
 

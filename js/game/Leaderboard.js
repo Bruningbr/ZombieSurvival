@@ -45,7 +45,8 @@ class Leaderboard {
         this.save();
 
         // Return rank
-        return this.entries.findIndex(e => e === entry) + 1;
+        const idx = this.entries.findIndex(e => e === entry);
+        return idx >= 0 ? idx + 1 : this.entries.length + 1;
     }
 
     getEntries(sortBy = 'score') {
