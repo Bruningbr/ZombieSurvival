@@ -1,297 +1,166 @@
-# 🧟 Zombie Survival - Apocalypse Online
+# Zombie Survival - Apocalipse Online 🧟
 
-Um jogo de sobrevivência de apocalipse zumbi multiplayer online feito com **Unity + C#**, utilizando **Mirror Networking** para multiplayer e **Universal Render Pipeline (URP)** para gráficos de alta qualidade.
+Jogo de sobrevivência de apocalipse zumbi **3D FPS** que roda direto no navegador! Feito com **Three.js**, **JavaScript**, e **WebSocket** para multiplayer.
 
-![Zombie Survival](https://img.shields.io/badge/Unity-2022.3%20LTS-blue) ![C#](https://img.shields.io/badge/C%23-10.0-green) ![Mirror](https://img.shields.io/badge/Mirror-Networking-orange) ![URP](https://img.shields.io/badge/URP-14.0-purple)
-
----
-
-## 🎮 Funcionalidades
-
-### Core Gameplay
-- **FPS Controller Completo**: Movimento, sprint, agachar, pular, head bobbing
-- **Sistema de Vida e Stamina**: Regeneração, efeitos visuais de dano, estado crítico
-- **Sistema de Armas**: Pistola, Rifle, Shotgun, SMG, Sniper, Melee (faca)
-- **ADS (Aim Down Sights)**: Mira com zoom, spread reduzido
-- **Recuo Realista**: Recoil com recuperação, spread baseado em movimento
-- **Inventário de Armas**: 3 slots, troca por tecla numérica ou scroll
-
-### Zombies (IA)
-- **5 Tipos de Zombies**:
-  - 🟢 **Walker** - Lento, básico
-  - 🔴 **Runner** - Rápido, frágil
-  - 🟤 **Tank** - Lento, muita vida
-  - 🟡 **Spitter** - Ataque à distância
-  - 🟣 **Screamer** - Alerta outros zombies
-- **NavMesh AI**: Pathfinding inteligente com desvio de obstáculos
-- **Sistema de Detecção**: Campo de visão + detecção por audição
-- **Ragdoll Physics**: Física de ragdoll na morte dos zombies
-- **Loot Drops**: Itens aleatórios ao matar zombies
-
-### Sistema de Waves
-- **Waves Progressivas**: Dificuldade crescente a cada wave
-- **Spawn Inteligente**: Zombies spawnando fora da visão dos jogadores
-- **Tipos Variados**: Mais tipos especiais em waves avançadas
-- **Scaling**: Vida, dano e velocidade aumentam com as waves
-
-### Multiplayer Online (Mirror)
-- **Host/Join**: Um jogador hospeda, outros se conectam
-- **Lobby System**: Sala de espera com sistema de ready
-- **Chat In-Game**: Comunicação entre jogadores
-- **Sincronização**: Posição, vida, armas, zombies sincronizados
-- **Até 16 jogadores** simultâneos
-
-### Ranking / Leaderboard
-- **Score System**: Pontos por kills, waves sobrevividas
-- **Leaderboard Persistente**: Ranking salvo entre sessões
-- **Estatísticas Completas**: Kills, Deaths, K/D Ratio, Tempo de Sobrevivência
-- **Ordenação**: Por score, kills ou tempo de sobrevivência
-- **Top Ranks**: Destaque visual para top 3 (ouro, prata, bronze)
-
-### Áudio
-- **Audio Manager Completo**: Pool de SFX, música, ambiente
-- **Sons Dinâmicos**: Música de combate vs calma
-- **Efeitos Posicionais**: Sons 3D espacializados
-- **Controle de Volume**: Master, Música, SFX, Ambiente separados
-- **Sons de Ambiente**: Dia/noite diferentes
-
-### Efeitos Visuais
-- **Post-Processing (URP)**: Vignette, Chromatic Aberration, Bloom, Film Grain
-- **Ciclo Dia/Noite**: Iluminação dinâmica, sol realista
-- **Sistema de Clima**: Chuva, neve, neblina, tempestade com raios
-- **Efeitos de Dano**: Overlay vermelho, chromatic aberration
-- **Visão Noturna**: Toggle para exploração no escuro
-- **Muzzle Flash**: Efeitos de tiro com ejeção de cartuchos
-
-### Interface (UI)
-- **HUD Completo**: Vida, stamina, munição, wave, score, minimap
-- **Menu Principal**: Play, Settings, Credits
-- **Lobby**: Lista de jogadores, ready system, customização
-- **Tela de Morte**: Stats, respawn timer, espectador
-- **Tela de Game Over**: Score final, ranking, estatísticas
-- **Pausa**: Resume, settings, quit
-- **Crosshair Dinâmico**: Hit marker normal e headshot
-- **Scope Overlay**: Para sniper rifle
+**Sem instalação necessária** — abra o `index.html` e jogue!
 
 ---
 
-## 📁 Estrutura do Projeto
+## Como Jogar
 
-```
-ZombieSurvival/
-├── Assets/
-│   ├── Scripts/
-│   │   ├── Player/
-│   │   │   ├── PlayerController.cs        # Movimento FPS, câmera
-│   │   │   ├── PlayerHealth.cs            # Sistema de vida
-│   │   │   ├── PlayerStamina.cs           # Sistema de stamina
-│   │   │   ├── PlayerInteraction.cs       # Interação com objetos
-│   │   │   ├── PlayerInventory.cs         # Inventário de armas
-│   │   │   └── PlayerAnimationController.cs # Animações do jogador
-│   │   ├── Zombie/
-│   │   │   ├── ZombieAI.cs               # IA dos zombies (NavMesh)
-│   │   │   ├── ZombieSpawner.cs          # Sistema de spawn/waves
-│   │   │   └── ZombieAnimationController.cs # Animações/ragdoll
-│   │   ├── Weapons/
-│   │   │   ├── WeaponBase.cs             # Classe base de armas
-│   │   │   └── WeaponTypes.cs            # Pistol, Rifle, Shotgun, SMG, Sniper, Melee
-│   │   ├── Network/
-│   │   │   ├── GameNetworkManager.cs     # Gerenciador de rede
-│   │   │   ├── LobbyManager.cs           # Sistema de lobby
-│   │   │   └── NetworkChat.cs            # Chat in-game
-│   │   ├── Ranking/
-│   │   │   └── LeaderboardSystem.cs      # Score + Leaderboard
-│   │   ├── Audio/
-│   │   │   ├── AudioManager.cs           # Gerenciador de áudio
-│   │   │   └── AmbientSoundController.cs # Sons ambiente dinâmicos
-│   │   ├── UI/
-│   │   │   ├── GameHUD.cs               # HUD principal
-│   │   │   ├── MainMenuUI.cs            # Menu principal
-│   │   │   ├── LobbyUI.cs              # Interface do lobby
-│   │   │   ├── LeaderboardUI.cs         # Ranking/leaderboard
-│   │   │   ├── GameOverScreen.cs        # Tela de game over
-│   │   │   └── DeathScreenAndPauseMenu.cs # Morte e pausa
-│   │   ├── GameManager/
-│   │   │   ├── GameManager.cs           # Controle geral do jogo
-│   │   │   ├── DayNightCycle.cs         # Ciclo dia/noite
-│   │   │   ├── WeatherSystem.cs         # Sistema de clima
-│   │   │   ├── PickupItem.cs            # Itens coletáveis
-│   │   │   └── PostProcessingController.cs # Efeitos visuais
-│   │   └── Utils/
-│   │       └── Utilities.cs             # Object pooling, extensões
-│   ├── Scenes/
-│   ├── Prefabs/
-│   ├── Materials/
-│   ├── Animations/
-│   ├── Audio/
-│   └── UI/
-├── Packages/
-│   └── manifest.json                    # Dependências Unity
-├── ProjectSettings/
-└── README.md
-```
+### Opção 1: Abrir direto no navegador
+1. Abra o arquivo `index.html` no seu navegador (Chrome/Firefox/Edge)
+2. Clique em **JOGAR**
+3. Clique na tela para ativar o mouse lock
+4. Sobreviva!
 
----
-
-## 🚀 Como Configurar
-
-### Pré-requisitos
-- **Unity 2022.3 LTS** ou superior
-- **Unity Hub** instalado
-- **Mirror Networking** (via Asset Store ou Package Manager)
-
-### Passo 1: Clonar o Repositório
+### Opção 2: Com servidor local (recomendado)
 ```bash
-git clone https://github.com/Bruningbr/ZombieSurvival.git
+# Na pasta do projeto, rode um servidor HTTP simples:
+npx serve .
+# ou
+python3 -m http.server 8080
 ```
+Depois abra `http://localhost:3000` ou `http://localhost:8080` no navegador.
 
-### Passo 2: Abrir no Unity
-1. Abra o **Unity Hub**
-2. Clique em **"Add"** → selecione a pasta do projeto
-3. Abra o projeto (Unity vai importar automaticamente)
+### Multiplayer
+```bash
+# Instale as dependências do servidor
+cd server && npm install
 
-### Passo 3: Instalar Mirror Networking
-1. No Unity, vá em **Window → Asset Store**
-2. Busque **"Mirror"** (Mirror Networking - vis2k)
-3. Clique em **Download** e **Import**
-4. Ou via Package Manager: adicione `com.unity.mirror` ao manifest.json
-
-### Passo 4: Configurar URP
-1. Vá em **Edit → Project Settings → Graphics**
-2. Defina o **URP Pipeline Asset** (criar um se necessário)
-3. Ajuste as configurações de qualidade em **Edit → Project Settings → Quality**
-
-### Passo 5: Importar Assets 3D
-O jogo precisa de assets 3D para funcionar. Veja a seção de **Assets Recomendados** abaixo.
-
-### Passo 6: Configurar Cenas
-1. Crie as cenas: **MainMenu**, **Lobby**, **GameScene**
-2. Adicione os prefabs e configure os componentes
-3. Configure o **NavMesh** na cena de jogo (Window → AI → Navigation)
-
-### Passo 7: Build
-1. **File → Build Settings**
-2. Adicione as cenas na ordem: MainMenu, Lobby, GameScene
-3. Selecione a plataforma (PC, Mac, Linux)
-4. Clique em **Build**
+# Rode o servidor WebSocket
+npm start
+```
+No jogo, clique em **MULTIPLAYER**, insira o endereço `ws://localhost:3000`, e clique **HOSPEDAR** ou **CONECTAR**.
 
 ---
 
-## 🎨 Assets Recomendados (Unity Asset Store)
-
-### Gratuitos
-| Asset | Descrição |
-|-------|-----------|
-| [Starter Assets - FPS](https://assetstore.unity.com/packages/essentials/starter-assets-first-person-character-controller-urp-196525) | Controller FPS oficial Unity |
-| [Low Poly Zombie](https://assetstore.unity.com/packages/3d/characters/humanoids/zombie-30232) | Modelos de zombie gratuitos |
-| [Free Urban Night Sky](https://assetstore.unity.com/packages/2d/textures-materials/sky/free-urban-night-sky-115283) | Skybox noturno |
-| [FREE Stylized PBR Textures](https://assetstore.unity.com/packages/2d/textures-materials/free-stylized-pbr-textures-pack-111778) | Texturas PBR gratuitas |
-
-### Pagos (Para Hiper-Realismo)
-| Asset | Descrição | Preço ~USD |
-|-------|-----------|------------|
-| [Zombie Character Pack](https://assetstore.unity.com/packages/3d/characters/humanoids/zombie-character-pack-72857) | Pack de zombies realistas | $30-50 |
-| [Modern Weapons Pack](https://assetstore.unity.com/packages/3d/props/guns/modern-weapons-pack-vol-1-140509) | Armas modernas com animações | $25-40 |
-| [Urban Environment Pack](https://assetstore.unity.com/packages/3d/environments/urban/urban-environment-pack-216777) | Cenário urbano realista | $40-60 |
-| [Mega Particle Effects](https://assetstore.unity.com/packages/vfx/particles/mega-particles-pack-55499) | Efeitos de partículas | $20-30 |
-| [Universal Sound FX](https://assetstore.unity.com/packages/audio/sound-fx/universal-sound-fx-17256) | Pack de sons completo | $40 |
-
----
-
-## 🎮 Controles
+## Controles
 
 | Tecla | Ação |
 |-------|------|
-| **WASD** | Movimento |
-| **Mouse** | Olhar |
+| **WASD** | Mover |
+| **Mouse** | Olhar/Mirar |
+| **Clique Esquerdo** | Atirar |
+| **Clique Direito** | Mira (ADS) |
 | **Shift** | Correr |
-| **Ctrl / C** | Agachar |
-| **Space** | Pular |
-| **Mouse Esquerdo** | Atirar |
-| **Mouse Direito** | Mirar (ADS) |
+| **C / Ctrl** | Agachar |
+| **Espaço** | Pular |
 | **R** | Recarregar |
-| **E** | Interagir |
-| **1-3** | Trocar arma |
+| **1, 2, 3** | Trocar arma |
 | **Scroll** | Trocar arma |
-| **Tab** | Leaderboard |
 | **Esc** | Pausar |
-| **Enter** | Chat |
 
 ---
 
-## 🌐 Como Jogar Online
+## Funcionalidades
 
-### Hospedar (Host)
-1. No menu principal, insira seu nome
-2. Clique em **"Host Game"**
-3. Compartilhe seu **IP** com seus amigos
+### Gameplay
+- **Controle FPS completo** — mover, correr, agachar, pular, head bobbing
+- **Sistema de vida** com regeneração automática
+- **Sistema de stamina** para sprint
+- **6 tipos de armas** — Pistola, Rifle, Shotgun, SMG, Sniper, Faca
+- **ADS (mira)** com zoom e spread reduzido
+- **Recoil realista** por tipo de arma
+- **Pickups** — vida, munição, armas novas espalhadas pelo mapa
 
-### Conectar (Join)
-1. No menu principal, insira seu nome
-2. Insira o **IP do host**
-3. Clique em **"Join Game"**
+### Zombies (IA)
+- **5 tipos de zombies:**
+  - 🟢 Walker — lento, básico
+  - 🔴 Runner — rápido, frágil
+  - 🟤 Tank — lento, muita vida
+  - 🟡 Spitter — ataque à distância
+  - 🟣 Screamer — alerta outros zombies
+- **Waves progressivas** com dificuldade crescente
+- **IA com detecção** — perseguem, atacam, vagueiam
+- **Animações** — andar, correr, atacar, morrer
+- **Ragdoll** na morte
 
-### Lobby
-1. Todos os jogadores devem clicar em **"Ready"**
-2. Quando todos estiverem prontos, a contagem regressiva começa
-3. O host pode forçar o início
+### Mundo
+- **Cidade 3D completa** — prédios, carros, barricadas, postes, lixeiras
+- **Ciclo dia/noite** com iluminação dinâmica
+- **Neblina** atmosférica
+- **Barris de fogo** com iluminação
 
----
+### Ranking
+- **Leaderboard persistente** (salvo no navegador)
+- **Score** por kills, headshots, waves
+- **Ranking** por score, kills, waves, tempo de sobrevivência
+- **Top 3** com destaque (ouro, prata, bronze)
 
-## 📝 Sistemas Técnicos
+### Áudio
+- **Sons procedurais** — tiros, zombies, passos, pickups, UI
+- **Sons diferentes** por tipo de arma
+- **Sons de zombie** — groaning, ataque, morte, detecção
+- **Heartbeat** quando a vida está baixa
+- **Controle de volume** — Master, Música, SFX separados
 
-### Arquitetura de Rede
-- **Modelo Client-Server** usando Mirror
-- **SyncVar** para sincronização de estado
-- **Command/ClientRpc** para comunicação client-server
-- **SyncList** para leaderboard sincronizado
+### UI
+- **HUD completo** — vida, stamina, munição, wave, score, crosshair
+- **Hit markers** normais e headshot
+- **Overlay de dano** (tela vermelha)
+- **Notificação de wave**
+- **Menu principal** com settings
+- **Menu de pausa**
+- **Tela de morte** com respawn timer
+- **Tela de game over** com estatísticas completas
+- **Leaderboard** com tabs de ordenação
 
-### IA dos Zombies
-- **Máquina de Estados**: Idle → Wandering → Chasing → Attacking
-- **NavMesh**: Pathfinding com obstacle avoidance
-- **Detecção**: FOV visual + detecção por audição
-- **Tipos**: Comportamentos diferentes por tipo
-
-### Otimização
-- **Object Pooling**: Reutilização de objetos (balas, efeitos)
-- **LOD**: Level of Detail para performance
-- **Occlusion Culling**: Não renderizar objetos não visíveis
-- **NavMesh Agents**: Pathfinding otimizado pela Unity
-
----
-
-## 🔧 Configuração Avançada
-
-### Servidor Dedicado
-Para criar um servidor dedicado:
-1. Build com `-batchmode -nographics`
-2. Adicione lógica de auto-start no GameNetworkManager
-3. Configure port forwarding na porta 7777 (padrão Mirror)
-
-### Backend de Ranking (Produção)
-O leaderboard atual usa PlayerPrefs (local). Para produção:
-1. Implemente uma API REST (Node.js/Python)
-2. Use Firebase, PlayFab, ou seu próprio backend
-3. Substitua `SaveLeaderboard()`/`LoadLeaderboard()` por chamadas HTTP
-
----
-
-## 📄 Licença
-
-Este projeto é para uso educacional e pessoal.
+### Multiplayer
+- **WebSocket** server para até 16 jogadores
+- **Chat** in-game
+- **Sincronização** de posição e estado
 
 ---
 
-## 👨‍💻 Desenvolvido com
+## Tecnologias
 
-- **Unity 2022.3 LTS**
-- **C# 10**
-- **Mirror Networking**
-- **Universal Render Pipeline (URP)**
-- **TextMeshPro**
-- **NavMesh AI**
-- **Post-Processing Stack**
+- **Three.js** — Rendering 3D, iluminação, sombras
+- **Web Audio API** — Sons procedurais, efeitos sonoros
+- **WebSocket (ws)** — Multiplayer em tempo real
+- **localStorage** — Persistência do leaderboard
+- **HTML5 Canvas** — Rendering
+- **Pointer Lock API** — Controle FPS do mouse
 
 ---
 
-*Feito com ❤️ por Bruno*
+## Estrutura do Projeto
+
+```
+ZombieSurvivalWeb/
+├── index.html              # Página principal
+├── css/style.css           # Estilos da UI
+├── js/
+│   ├── main.js             # Ponto de entrada
+│   ├── game/
+│   │   ├── Game.js         # Controlador principal
+│   │   └── Leaderboard.js  # Ranking e persistência
+│   ├── player/
+│   │   ├── PlayerController.js  # Movimento FPS
+│   │   ├── PlayerHealth.js      # Sistema de vida
+│   │   └── PlayerStamina.js     # Sistema de stamina
+│   ├── weapons/
+│   │   └── WeaponSystem.js      # 6 armas com tiro, recarga, ADS
+│   ├── zombie/
+│   │   ├── ZombieAI.js          # IA com 5 tipos
+│   │   └── ZombieSpawner.js     # Sistema de waves
+│   ├── environment/
+│   │   ├── Environment.js       # Cidade 3D (prédios, carros, etc.)
+│   │   └── DayNightCycle.js     # Ciclo dia/noite
+│   ├── audio/
+│   │   └── AudioManager.js      # Sons procedurais
+│   ├── ui/
+│   │   ├── HUD.js              # HUD do jogo
+│   │   └── MenuManager.js      # Menus e telas
+│   ├── network/
+│   │   └── MultiplayerClient.js # WebSocket client
+│   └── utils/
+│       └── MathUtils.js         # Utilitários
+└── server/
+    ├── server.js           # Servidor WebSocket
+    └── package.json        # Dependências do servidor
+```
+
+---
+
+*Feito com ❤ por Bruno*
