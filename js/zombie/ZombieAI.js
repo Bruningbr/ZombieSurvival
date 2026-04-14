@@ -18,8 +18,8 @@ class ZombieAI {
         this.detectionRange = this.stats.detectionRange;
         this.scoreValue = this.stats.scoreValue;
 
-        // AI state
-        this.state = 'idle'; // idle, wander, chase, attack, stunned, dead
+        // AI state - start in chase mode so zombies immediately pursue the player
+        this.state = 'chase'; // idle, wander, chase, attack, stunned, dead
         this.target = null;
         this.wanderTarget = null;
         this.stateTimer = 0;
@@ -39,28 +39,28 @@ class ZombieAI {
     getStatsByType(type) {
         const stats = {
             walker: {
-                health: 80, speed: 2.0, damage: 10, attackRange: 2.0,
-                detectionRange: 20, scoreValue: 100, color: 0x446633,
+                health: 80, speed: 4.5, damage: 10, attackRange: 2.0,
+                detectionRange: 60, scoreValue: 100, color: 0x446633,
                 height: 1.8, attackCooldown: 1.2
             },
             runner: {
-                health: 50, speed: 5.0, damage: 8, attackRange: 1.8,
-                detectionRange: 25, scoreValue: 150, color: 0x663333,
+                health: 50, speed: 8.0, damage: 8, attackRange: 1.8,
+                detectionRange: 80, scoreValue: 150, color: 0x663333,
                 height: 1.7, attackCooldown: 0.8
             },
             tank: {
-                health: 250, speed: 1.2, damage: 25, attackRange: 2.5,
-                detectionRange: 15, scoreValue: 300, color: 0x444433,
+                health: 250, speed: 3.0, damage: 25, attackRange: 2.5,
+                detectionRange: 50, scoreValue: 300, color: 0x444433,
                 height: 2.2, attackCooldown: 2.0
             },
             spitter: {
-                health: 60, speed: 2.5, damage: 15, attackRange: 12,
-                detectionRange: 30, scoreValue: 200, color: 0x336644,
+                health: 60, speed: 5.0, damage: 15, attackRange: 12,
+                detectionRange: 70, scoreValue: 200, color: 0x336644,
                 height: 1.7, attackCooldown: 3.0
             },
             screamer: {
-                health: 40, speed: 3.0, damage: 5, attackRange: 1.5,
-                detectionRange: 35, scoreValue: 250, color: 0x555555,
+                health: 40, speed: 6.0, damage: 5, attackRange: 1.5,
+                detectionRange: 90, scoreValue: 250, color: 0x555555,
                 height: 1.6, attackCooldown: 1.0
             }
         };
@@ -257,8 +257,14 @@ class ZombieAI {
     }
 
     handleIdle(deltaTime) {
-        if (this.stateTimer > MathUtils.randFloat(2, 5)) {
-            this.state = 'wander';
+        // Very short idle time - zombies quickly start chasing
+        if (this.stateTimer > MathUtils.randFloat(0.3, 1.0)) {
+            // If we have a target, go straight to chase
+            if (this.target) {
+                this.state = 'chase';
+            } else {
+                this.state = 'wander';
+            }
             this.stateTimer = 0;
             this.wanderTarget = {
                 x: this.mesh.position.x + MathUtils.randFloat(-15, 15),
@@ -268,19 +274,30 @@ class ZombieAI {
     }
 
     handleWander(deltaTime) {
+        // If we have a target (player), switch to chase immediately
+        if (this.target) {
+            const distToPlayer = MathUtils.distanceFlat(this.mesh.position, this.target);
+            if (distToPlayer < this.detectionRange) {
+                this.state = 'chase';
+                this.stateTimer = 0;
+                return;
+            }
+        }
+
         if (!this.wanderTarget) {
             this.state = 'idle';
             return;
         }
 
         const dist = MathUtils.distanceFlat(this.mesh.position, this.wanderTarget);
-        if (dist < 1 || this.stateTimer > 8) {
+        if (dist < 1 || this.stateTimer > 4) {
             this.state = 'idle';
             this.stateTimer = 0;
             return;
         }
 
-        this.moveToward(this.wanderTarget, this.speed * 0.4, deltaTime);
+        // Wander faster toward player direction
+        this.moveToward(this.wanderTarget, this.speed * 0.6, deltaTime);
     }
 
     handleChase(deltaTime) {
@@ -297,7 +314,8 @@ class ZombieAI {
             return;
         }
 
-        if (dist > this.detectionRange * 1.5) {
+        // Never lose interest - zombies always chase once they see you
+        if (dist > this.detectionRange * 3) {
             this.state = 'wander';
             this.stateTimer = 0;
             return;

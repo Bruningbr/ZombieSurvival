@@ -82,12 +82,16 @@ class ZombieSpawner {
         let bestSpawn = null;
         let bestDist = 0;
 
-        for (let i = 0; i < 5; i++) {
+        // Spawn zombies closer to the player so they reach you quickly
+        for (let i = 0; i < 8; i++) {
             const sp = this.environment.getRandomSpawnPoint();
             const dist = MathUtils.distanceFlat(sp, playerPosition);
-            if (dist > bestDist && dist > 15) {
-                bestDist = dist;
-                bestSpawn = sp;
+            // Prefer spawn points 10-30 units from player (close but not on top)
+            if (dist > 10 && dist < 35) {
+                if (!bestSpawn || dist < bestDist) {
+                    bestDist = dist;
+                    bestSpawn = sp;
+                }
             }
         }
 
